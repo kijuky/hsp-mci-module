@@ -19,12 +19,15 @@
 		dialog "扱える id 数を超えています\nid = " + i, 1, "mci_open 命令"
 		end
 	}
-	exist s : if strsize == -1 {
+
+	exist s
+	if strsize == -1 {
 		dialog "ファイルが開けません。\n file_name = " + s, 1, "mci_open 命令"
 		end
 	}
 	mci "open " + s + " alias " + i
-	mci_file.i = 1 : mci_file.i.1 = m
+	mci_file.i = 1
+	mci_file.i.1 = m
 	return
 
 /**
@@ -40,7 +43,9 @@
  */
 #deffunc mci_stop_all
 	repeat max_mci_file
-		if mci_file.cnt : mci_stop cnt
+		if mci_file.cnt {
+			mci_stop cnt
+		}
 	loop
 	return
 
@@ -58,7 +63,9 @@
  */
 #deffunc mci_destroy_all
 	repeat max_mci_file
-		if mci_file.cnt : mci_destroy cnt
+		if mci_file.cnt {
+			mci_destroy cnt
+		}
 	loop
 	return
 
@@ -90,7 +97,12 @@
  */
 #deffunc mci_chk_stop_all
 	repeat max_mci_file
-		if mci_file.cnt && (mci_file.cnt.1 != 1) : mci_chk_stop cnt : if stat : break
+		if mci_file.cnt && (mci_file.cnt.1 != 1) {
+			mci_chk_stop cnt
+			if stat {
+				break
+			}
+		}
 	loop
 	return
 
@@ -103,11 +115,12 @@
 		dialog "その id にはメディアがロードされていません\nid = " + i, 1, "mci_play 命令"
 		end
 	}
-	mci "play " + i + " from 0 "
+	mci "play " + i + " from 0"
 	if mci_file.i.1 == 2 {
-*@:		mci_chk_play i
-		await 15
-		if stat : goto @b
+		do
+			mci_chk_play i
+			await 15
+		until stat
 	}
 	return
 
@@ -120,7 +133,12 @@
 		dialog "その id にはメディアがロードされていません\nid = " + i, 1, "mci_chk_infinity 命令"
 		end
 	}
-	if mci_file.i.1 == 1 : mci_chk_stop i : if stat : mci_play i
+	if mci_file.i.1 == 1 {
+		mci_chk_stop i
+		if stat {
+			mci_play i
+		}
+	}
 	return
 
 /**
@@ -128,10 +146,11 @@
  */
 #deffunc mci_chk_infinity_all
 	repeat max_mci_file
-		if mci_file.cnt : mci_chk_infinity cnt
+		if mci_file.cnt {
+			mci_chk_infinity cnt
+		}
 	loop
 	return
-
 
 /**
  * mymci の開放
@@ -139,5 +158,4 @@
 #deffunc mci_close onexit
 	mci_destroy_all
 	return
-
 #global
