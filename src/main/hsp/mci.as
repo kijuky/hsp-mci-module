@@ -88,7 +88,7 @@
 	mref i, 0
 	mref s, 64
 	mci_chk_stop i
-	s = s + 1 \ 2
+	s = s ^ 1
 	return
 
 /**
